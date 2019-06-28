@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whitesmoke"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+	<TextView 
+	    android:id="@+id/no_line"
+	    style="@style/TextStyle03"
+	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center"
+    	android:background="@drawable/cornerbtn_style2"
+    	android:text="@string/underline_nothing"
+	    />
+	<TextView 
+	    android:id="@+id/underline01"
+	    style="@style/TextStyle03"
+	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_marginTop="8dp"
+    	android:gravity="center"
+    	android:background="@drawable/cornerbtn_style3"
+    	android:text="@string/underline_first"
+	    />
+	<TextView 
+	    android:id="@+id/underline02"
+	    style="@style/TextStyle03"
+	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_marginTop="8dp"
+    	android:gravity="center"
+    	android:background="@drawable/cornerbtn_style2"
+    	android:text="@string/underline_sencond"
+	    />
+</LinearLayout>
