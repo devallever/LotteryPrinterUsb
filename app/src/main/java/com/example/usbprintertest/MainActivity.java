@@ -1410,7 +1410,7 @@ public class MainActivity extends Activity {
             return;
         String etstring = "";
         if (Utils.isZh(MainActivity.this)) {
-            etstring = Constant.TESTDATA_CN;
+            etstring = Constant.m_PrintDataCN;
         } else {
             etstring = Constant.TESTDATA_US;
         }
