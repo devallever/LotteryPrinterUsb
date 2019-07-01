@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import android.content.res.AssetManager;
 import com.example.usbprintertest.util.Bills;
 import com.example.usbprintertest.util.Constant;
 import com.example.usbprintertest.util.MyAdapter;
@@ -1119,6 +1120,7 @@ public class MainActivity extends Activity {
         if (inputBmp == null)
             return;
         int[] data = Utils.getPixelsByBitmap(inputBmp);
+        mUsbDriver.write(PrintCmd.PrintString("\n" + Constant.m_PrintDataCN + "\n", 0), mUsbDev);
         mUsbDriver.write(PrintCmd.PrintDiskImagefile(data, inputBmp.getWidth(), inputBmp.getHeight()));
         setFeedCut(cutter, Integer.valueOf(iline));
         // 2018-03-01 su change

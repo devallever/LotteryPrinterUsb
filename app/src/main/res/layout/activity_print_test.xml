@@ -7,6 +7,12 @@
 		android:id="@+id/btn_print"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="打印"/>
+		android:text="打印" />
+
+	<ImageView
+		android:id="@+id/image"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true" />
 
 </RelativeLayout>

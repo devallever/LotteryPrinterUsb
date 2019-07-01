@@ -156,5 +156,7 @@
     <string name="input_execution_times_hint">输入执行次数</string>
     <string name="default_interval_time">3000</string>
     <string name="default_execution_times">3</string>
-    
+
+    <string name="receipt_tips">亲爱的读者，您当前办证已超过 %s 天，当前已借阅 %s 册，还可借阅 %s 册，截至 %s 累计借阅图书共 %s 册，节省购书成本约 %s 元。体验更多信息内容请扫描下方二维码关注图书馆公众号。</string>
+
 </resources>

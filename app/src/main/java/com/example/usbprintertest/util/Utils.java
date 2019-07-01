@@ -8,6 +8,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.UUID;
 
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -325,7 +327,15 @@ public class Utils {
 		Bitmap bm = BitmapFactory.decodeFile(imgPath, getBitmapOption(1)); // 将图片的长和宽缩小为原来的1/2
 		return bm;
 	}
-	
+
+
+	public static Bitmap getBitmapData(Resources res, int resId) {
+		Bitmap bm = BitmapFactory.decodeResource(res, resId);
+		return bm;
+	}
+
+
+
 	/** ---保存Bitmap到本地路径-------------------------------------------------------*/
 	private static final String SD_PATH = "/sdcard/masung/pic/";
     private static final String IN_PATH = "/masung/pic/";
