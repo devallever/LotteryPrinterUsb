@@ -26,7 +26,7 @@
             </intent-filter>
         </activity> -->
         <activity
-                android:name="com.example.usbprintertest.MainActivity"
+                android:name="com.example.usbprintertest.PrintTestActivity"
                 android:label="@string/app_name"
                 android:screenOrientation="unspecified" >
             <intent-filter>
@@ -40,6 +40,11 @@
             </intent-filter>
             <!-- <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" /> -->
         </activity>
+        <!--<activity android:name=".PrintTestActivity">-->
+            <!--<intent-filter>-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
     </application>
 
 </manifest>

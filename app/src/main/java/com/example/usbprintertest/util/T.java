@@ -1,6 +1,7 @@
 package com.example.usbprintertest.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -8,6 +9,8 @@ import android.widget.Toast;
  * @author 贤哥
  */
 public class T {
+
+	private static final String TAG = "ToastUtils";
 
 	private T() {
 		/* cannot be instantiated */
@@ -23,8 +26,11 @@ public class T {
 	 * @param message
 	 */
 	public static void showShort(Context context, CharSequence message) {
-		if (isShow)
+		if (isShow){
+
 			Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+			Log.d(TAG, "showShort: " + message);
+		}
 	}
 
 	/**

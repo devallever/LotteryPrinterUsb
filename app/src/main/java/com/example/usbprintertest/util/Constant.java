@@ -75,7 +75,7 @@ public class Constant {
 			+ "4,减少空间位置及布线的繁琐，有效提升产品组装过程的合格率，可选择完全兼容epsonM-T532打印头的安装尺寸，无需做任何改动；\n"
 			+ "5,接口多样化：串口，USB，并口可供选择，并提供全面的软件指令及简介的驱动程序；\n"
 			+ "6,具有强大的防堵纸，防拽纸及出纸提示闪灯功能，让您省心省事！\n"
-			+ "7,具有自动送纸，自动收纸回收票据功能，让一切变的人性化！\n\n\n";
+			+ "7,具有自动送纸，自动收纸回收票据功能，让一切变的人性化！\n";
 	public static String m_PrintDataUS = "Small panel structure, using the latest ARM design "
 			+ " and printers movement in the same institution, reduce the space of the installation, the "
 			+ " installation of improve product reliability; The design is exquisite, stable performance "
