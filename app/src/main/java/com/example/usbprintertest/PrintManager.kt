@@ -9,39 +9,51 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Parcelable
 import android.util.Log
-import com.example.usbprintertest.util.T
+import com.example.usbprintertest.util.Utils
+import com.printsdk.cmd.PrintCmd
 import com.printsdk.usbsdk.UsbDriver
+import java.io.BufferedInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 object PrintManager {
 
+    //默认为:1, 0 靠左、1  居中、2:靠右
+    const val PRINT_LEFT = 0
+    const val PRINT_MIDDLE = 1
+    const val PRINT_RIGHT = 2
+
     private val TAG = PrintManager::class.java.simpleName
 
-    private val PID11 = 8211
-    private val PID13 = 8213
-    private val PID15 = 8215
-    private val VENDORID = 1305
+    private const val PID11 = 8211
+    private const val PID13 = 8213
+    private const val PID15 = 8215
+    private const val VENDORID = 1305
 
-    private val ACTION_USB_PERMISSION = "com.usb.sample.USB_PERMISSION"
+    private const val ACTION_USB_PERMISSION = "com.usb.sample.USB_PERMISSION"
 
-    internal var mUsbDriver: UsbDriver? = null
-    internal var mUsbDev1: UsbDevice? = null        //打印机1
-    internal var mUsbDev2: UsbDevice? = null        //打印机2
-    internal var mUsbDev: UsbDevice? = null
+    private var mUsbDriver: UsbDriver? = null
+    private var mUsbDev1: UsbDevice? = null        //打印机1
+    private var mUsbDev2: UsbDevice? = null        //打印机2
+    private var mUsbDev: UsbDevice? = null
 
     private var mUsbManager: UsbManager? = null
     private var mUsbReceiver: UsbReceiver? = null
 
     private var connectedStatus = false
 
-    fun initPrinter(context: Context) {
+    fun connectPrinter(context: Context) {
+        setDefaultPrinterParameters()
         try {
             if (mUsbDriver?.isConnected == false) {
                 // USB线未连接
                 mUsbManager?.deviceList?.map {
                     val device = it.value
                     if (device.productId == PID11 && device.vendorId == VENDORID
-                            || device.productId == PID13 && device.vendorId == VENDORID
-                            || device.productId == PID15 && device.vendorId == VENDORID) {
+                        || device.productId == PID13 && device.vendorId == VENDORID
+                        || device.productId == PID15 && device.vendorId == VENDORID
+                    ) {
                         connectedStatus = mUsbDriver?.usbAttached(device) == true
                         if (!connectedStatus) {
                             return@map
@@ -76,23 +88,88 @@ object PrintManager {
         }
     }
 
-    fun destory() {
-
+    fun destroy(context: Context) {
+        unRegistUSBReciever(context)
+        mUsbDriver = null
+        mUsbDev = null
+        mUsbDev1 = null
+        mUsbDev2 = null
     }
 
-    fun printString() {
-
+    fun appendString(content: String, align: Int = PRINT_LEFT, isBlob: Boolean = false): PrintManager {
+        setDefaultPrinterParameters()
+        mUsbDriver?.write(PrintCmd.SetAlignment(align), mUsbDev)
+        if (isBlob) {
+            mUsbDriver?.write(PrintCmd.SetBold(1), mUsbDev)
+        } else {
+            mUsbDriver?.write(PrintCmd.SetBold(0), mUsbDev)
+        }
+        val data = PrintCmd.PrintString(content, 0)
+        mUsbDriver?.write(data, data.size, mUsbDev)
+        return this
     }
 
-    fun printQRCode() {
-
+    /***
+     * @param marginLeft 0 - 28
+     * @param scale 放大 1 - 8
+     */
+    fun appendQRCode(content: String, marginLeft: Int, scale: Int): PrintManager {
+        setDefaultPrinterParameters()
+        mUsbDriver?.write(PrintCmd.PrintQrcode(content, marginLeft, scale, 0))
+        return this
     }
+
+    fun appendImage(context: Context, filePath: String): PrintManager {
+        setDefaultPrinterParameters()
+        //打印logo
+        if (!createFile(context, filePath)) {
+            return this
+        }
+        val inputBmp = Utils.getBitmapData(filePath) ?: return this
+        val data = Utils.getPixelsByBitmap(inputBmp)
+        mUsbDriver?.write(PrintCmd.PrintDiskImagefile(data, inputBmp.width, inputBmp.height))
+        return this
+    }
+
+    fun canPrint(context: Context): Boolean {
+        val printEndStatus = PrintCmd.getPrintEndStatus(mUsbDriver)
+        val printerStatus = getPrinterStatus(mUsbDev)
+        Log.d(TAG, "printerStatus = $printerStatus")
+        return if (printEndStatus != -1) {
+            val checkStatus = checkStatus(context, printerStatus)
+            Log.d(TAG, "checkStatus $checkStatus")
+            checkStatus == 0
+        } else {
+            false
+        }
+    }
+
+    fun print(context: Context): Boolean {
+        if (!canPrint(context)) {
+            return false
+        }
+        try {
+            // 走纸换行
+            mUsbDriver?.write(PrintCmd.PrintFeedline(4))
+            // 切纸类型0: 全切
+            mUsbDriver?.write(PrintCmd.PrintCutpaper(0))
+            // 清除缓存,初始化
+            mUsbDriver?.write(PrintCmd.SetClean())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+        return true
+    }
+
 
     fun registUSBReceiver(context: Context) {
         mUsbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
         mUsbDriver = UsbDriver(mUsbManager, context)
-        val permissionIntent1 = PendingIntent.getBroadcast(context, 0,
-                Intent(ACTION_USB_PERMISSION), 0)
+        val permissionIntent1 = PendingIntent.getBroadcast(
+            context, 0,
+            Intent(ACTION_USB_PERMISSION), 0
+        )
         mUsbDriver?.setPermissionIntent(permissionIntent1)
         // Broadcast listen for new devices
 
@@ -108,6 +185,155 @@ object PrintManager {
         context.unregisterReceiver(mUsbReceiver)
     }
 
+    private fun checkStatus(context: Context, status: Int): Int {
+        var iRet = -1
+
+        val sMsg = StringBuilder()
+
+
+        //0 打印机正常 、1 打印机未连接或未上电、2 打印机和调用库不匹配
+        //3 打印头打开 、4 切刀未复位 、5 打印头过热 、6 黑标错误 、7 纸尽 、8 纸将尽
+        when (status) {
+            0 -> {
+                sMsg.append("正常")
+                iRet = 0
+            }
+            8 -> {
+                sMsg.append("纸将尽")
+                iRet = 0
+            }
+            3 -> {
+                sMsg.append("打印头打开")
+                ToastUtils.show( "打印头打开")
+            }
+            4 -> {
+                sMsg.append("切刀未复位")
+                ToastUtils.show( "切刀未复位")
+            }
+            5 -> {
+                sMsg.append("打印头过热")
+                ToastUtils.show( "打印头过热")
+            }
+            6 -> {
+                sMsg.append("黑标错误")
+                ToastUtils.show( "黑标错误")
+            }
+            7 -> {
+                sMsg.append("纸尽==缺纸")
+                ToastUtils.show( "纸尽==缺纸")
+            }
+            1 -> {
+                sMsg.append("打印机未连接或未上电")
+                ToastUtils.show( "打印机未连接或未上电")
+            }
+            else -> {
+                sMsg.append("异常")
+                ToastUtils.show( "异常")
+            }
+        }
+        val message = sMsg.toString()
+        Log.d(TAG, message)
+        return iRet
+    }
+
+    // 检测打印机状态
+    private fun getPrinterStatus(usbDev: UsbDevice?): Int {
+        var status = -1
+
+        val bRead1 = ByteArray(1)
+        val bWrite1 = PrintCmd.GetStatus1()
+        if (mUsbDriver?.read(bRead1, bWrite1, usbDev)!! > 0) {
+            status = PrintCmd.CheckStatus1(bRead1[0])
+        }
+
+        if (status != 0)
+            return status
+
+        val bRead2 = ByteArray(1)
+        val bWrite2 = PrintCmd.GetStatus2()
+        if (mUsbDriver?.read(bRead2, bWrite2, usbDev)!! > 0) {
+            status = PrintCmd.CheckStatus2(bRead2[0])
+        }
+
+        if (status != 0)
+            return status
+
+        val bRead3 = ByteArray(1)
+        val bWrite3 = PrintCmd.GetStatus3()
+        if (mUsbDriver?.read(bRead3, bWrite3, usbDev)!! > 0) {
+            status = PrintCmd.CheckStatus3(bRead3[0])
+        }
+
+        if (status != 0)
+            return status
+
+        val bRead4 = ByteArray(1)
+        val bWrite4 = PrintCmd.GetStatus4()
+        if (mUsbDriver?.read(bRead4, bWrite4, usbDev)!! > 0) {
+            status = PrintCmd.CheckStatus4(bRead4[0])
+        }
+        return status
+    }
+
+    private fun createFile(context: Context, filePath: String): Boolean {
+        val file = File(filePath)
+        if (file.exists()) {
+            file.delete()
+            file.createNewFile()
+        }
+
+        val parent = file.parentFile
+        if (!parent.exists()) {
+            parent.mkdirs()
+        }
+
+        return saveBitmapFile(context, filePath).length() != 0L
+
+    }
+
+    private fun saveBitmapFile(context: Context, filepath: String): File {
+        val assetManager = context.assets
+        val inputStream = assetManager.open("logo1.png")
+        val bufferedInputStream = BufferedInputStream(inputStream)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        val fileOutputStream = FileOutputStream(File(filepath))
+        try {
+            //如果要跳过1个字节数，传的是1
+            //跳过数据头，读取源文件数据
+            var len = -1
+            var buffer = ByteArray(1024)
+            while (bufferedInputStream.read(buffer).also { len = it } != -1) {
+                byteArrayOutputStream.write(buffer, 0, len)
+            }
+            fileOutputStream.write(byteArrayOutputStream.toByteArray())
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        } finally {
+            bufferedInputStream.close()
+            byteArrayOutputStream.close()
+            fileOutputStream.close()
+        }
+
+
+        return File(filepath)
+    }
+
+    private fun setDefaultPrinterParameters() {
+//        private var rotate = 0       // 默认为:0, 0 正常、1 90度旋转
+//        private var align = 0        // 默认为:1, 0 靠左、1  居中、2:靠右
+//        private var underLine = 0    // 默认为:0, 0 取消、   1 下划1、 2 下划2
+//        private var linespace = 40   // 默认40, 常用：30 40 50 60 行间距
+//        private var cutter = 0       // 默认0，  0 全切、1 半切
+        // 对齐方式
+        mUsbDriver?.write(PrintCmd.SetAlignment(0), mUsbDev)
+        // 字体旋转
+        mUsbDriver?.write(PrintCmd.SetRotate(0), mUsbDev)
+        // 下划线
+        mUsbDriver?.write(PrintCmd.SetUnderline(0), mUsbDev)
+        //行大小
+        mUsbDriver?.write(PrintCmd.SetLinespace(40), mUsbDev)
+    }
+
     /*
      *  BroadcastReceiver when insert/remove the device USB plug into/from a USB port
      *  创建一个广播接收器接收USB插拔信息：当插入USB插头插到一个USB端口，或从一个USB端口，移除装置的USB插头
@@ -120,12 +346,13 @@ object PrintManager {
                 if (mUsbDriver?.usbAttached(intent) == true) {
                     Log.d(TAG, "onReceive usbAttached = true")
                     val device = intent
-                            .getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice
+                        .getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice
                     Log.d(TAG, "onReceive device.productId = " + device.productId)
                     Log.d(TAG, "onReceive device.vendorId = " + device.vendorId)
                     if (device.productId == PID11 && device.vendorId == VENDORID
-                            || device.productId == PID13 && device.vendorId == VENDORID
-                            || device.productId == PID15 && device.vendorId == VENDORID) {
+                        || device.productId == PID13 && device.vendorId == VENDORID
+                        || device.productId == PID15 && device.vendorId == VENDORID
+                    ) {
                         if (mUsbDriver?.openUsbDevice(device) == true) {
                             Log.d(TAG, "onReceive openUsbDevice")
                             if (device.productId == PID11) {
@@ -144,10 +371,11 @@ object PrintManager {
                 }
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED == action) {
                 val device = intent
-                        .getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice
+                    .getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice
                 if (device.productId == PID11 && device.vendorId == VENDORID
-                        || device.productId == PID13 && device.vendorId == VENDORID
-                        || device.productId == PID15 && device.vendorId == VENDORID) {
+                    || device.productId == PID13 && device.vendorId == VENDORID
+                    || device.productId == PID15 && device.vendorId == VENDORID
+                ) {
                     mUsbDriver?.closeUsbDevice(device)
                     if (device.productId == PID11)
                         mUsbDev1 = null
@@ -159,8 +387,9 @@ object PrintManager {
                     val device = intent.getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (device.productId == PID11 && device.vendorId == VENDORID
-                                || device.productId == PID13 && device.vendorId == VENDORID
-                                || device.productId == PID15 && device.vendorId == VENDORID) {
+                            || device.productId == PID13 && device.vendorId == VENDORID
+                            || device.productId == PID15 && device.vendorId == VENDORID
+                        ) {
                             if (mUsbDriver?.openUsbDevice(device) == true) {
                                 if (device.productId == PID11) {
                                     mUsbDev1 = device
