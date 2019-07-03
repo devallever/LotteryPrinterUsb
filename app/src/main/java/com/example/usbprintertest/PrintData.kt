@@ -18,5 +18,20 @@ class PrintConfig {
     var rightMargin: Int = 0
     var qrLeftMargin: Int = 0
     var qrScale: Int = 8
-    var imageUr: String = ""
+    var imageUrl: String = ""
+
+    override fun toString(): String {
+        return "\nblob[$blob]\n" +
+                "align[$align]\n" +
+                "textScale[$textScale]\n" +
+                "underLine[$underLine]\n" +
+                "italic[$italic]\n" +
+                "lineSpace[$lineSpace]\n" +
+                "textSpace[$textSpace]\n" +
+                "leftMargin[$leftMargin]\n" +
+                "rightMargin[$rightMargin]\n" +
+                "qrLeftMargin[$qrLeftMargin]\n" +
+                "qrScale[$qrScale]\n" +
+                "imageUrl[$imageUrl]\n"
+    }
 }

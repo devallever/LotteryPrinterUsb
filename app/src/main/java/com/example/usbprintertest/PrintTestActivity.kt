@@ -29,6 +29,9 @@ class PrintTestActivity : Activity(), View.OnClickListener {
         initView()
 
         PrintManager.initPrinter(this)
+
+//        val url = "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/print_config.json"
+//        PrintHelper.getPrintConfig(this, url)
     }
 
     override fun onDestroy() {
@@ -49,7 +52,9 @@ class PrintTestActivity : Activity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             mBtnPrint -> {
-                print()
+//                print()
+                val url = "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/print_config.json"
+                PrintHelper.getPrintConfig(this, url)
             }
         }
     }
