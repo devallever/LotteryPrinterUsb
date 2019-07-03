@@ -94,10 +94,15 @@ class PrintTestActivity : Activity(), View.OnClickListener {
             Environment.getExternalStorageDirectory().absolutePath + File.separator + packageName + File.separator + "logo.png"
 
 
-        val printResult = PrintManager.appendString(title, PrintManager.PRINT_MIDDLE, true)
-            .appendString(content)
+        val printResult = PrintManager.appendString(title, PrintManager.PRINT_MIDDLE, 1)
+            .appendString("姓名：$name 左边距 10", leftMargin = 10)
+            .appendString("证号：$readerId 左边距 0 间距 = 3", textMargin = 3)
+            .appendString("日期：$date 间距 = 2", textMargin = 2)
+            .appendString("当前借阅：$currentBorrowBooks")
+            .appendString("\n$tips 间距 = 0 斜体", italic = 1, lineHeight = 30)
+//            .appendString(content)
 //            .appendQRCode(qrCodeContent, 26, 8)
-//            .appendString("")
+            .appendString("")
 //            .appendImage(this, filePath)
             .print()
         if (printResult) {

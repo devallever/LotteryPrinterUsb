@@ -102,21 +102,48 @@ object PrintManager {
         mUsbDev2 = null
     }
 
-    fun appendString(content: String, align: Int = PRINT_LEFT, isBlob: Boolean = false): PrintManager {
+    fun appendString(
+        content: String,
+        align: Int = PRINT_LEFT,
+        blob: Int = 0,
+        italic: Int = 0,
+        underLine: Int = 0,
+        scale: Int = 0,
+        leftMargin: Int = 0,
+        rightMargin: Int = 0,
+        lineHeight: Int = 40,
+        textMargin: Int = 0
+    ): PrintManager {
         setDefaultPrinterParameters()
+        //对齐
         mUsbDriver?.write(PrintCmd.SetAlignment(align), mUsbDev)
-        if (isBlob) {
-            mUsbDriver?.write(PrintCmd.SetBold(1), mUsbDev)
-        } else {
-            mUsbDriver?.write(PrintCmd.SetBold(0), mUsbDev)
-        }
+        //加粗
+        mUsbDriver?.write(PrintCmd.SetBold(blob), mUsbDev)
+        //斜体
+        mUsbDriver?.write(PrintCmd.SetItalic(italic), mUsbDev)
+        //下划线0,1,2
+        mUsbDriver?.write(PrintCmd.SetUnderline(underLine), mUsbDev)
+        //左边距
+        mUsbDriver?.write(PrintCmd.SetLeftmargin(leftMargin), mUsbDev)
+        //右边距
+        mUsbDriver?.write(PrintCmd.SetRightmargin(rightMargin), mUsbDev)
+        //放大
+        mUsbDriver?.write(PrintCmd.SetSizetext(scale, scale), mUsbDev)
+        //行间距(行高)
+        mUsbDriver?.write(PrintCmd.SetLinespace(lineHeight), mUsbDev)
+        //字符间距abc
+        mUsbDriver?.write(PrintCmd.SetSpacechar(textMargin), mUsbDev)
+        //汉字间距
+        mUsbDriver?.write(PrintCmd.SetSpacechinese(textMargin, textMargin), mUsbDev)
+
+
         val data = PrintCmd.PrintString(content, 0)
         mUsbDriver?.write(data, data.size, mUsbDev)
         return this
     }
 
     /***
-     * @param marginLeft 0 - 28
+     * @param marginLeft 0 - 27
      * @param scale 放大 1 - 8
      */
     fun appendQRCode(content: String, marginLeft: Int, scale: Int): PrintManager {
