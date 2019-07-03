@@ -151,7 +151,7 @@
         "rightMargin": 0,
         "qrLeftMargin": 0,
         "qrScale": 8,
-        "imageUr": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
+        "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
       }
     },
     {
@@ -169,7 +169,7 @@
         "rightMargin": 0,
         "qrLeftMargin": 0,
         "qrScale": 8,
-        "imageUr": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/test.png"
+        "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/test.png"
       }
     }
   ]
