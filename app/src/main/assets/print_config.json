@@ -132,7 +132,7 @@
         "textSpace": 0,
         "leftMargin": 0,
         "rightMargin": 0,
-        "qrLeftMargin": 0,
+        "qrLeftMargin": 26,
         "qrScale": 8
       }
     },
