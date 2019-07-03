@@ -14,75 +14,32 @@
         "leftMargin": 0,
         "rightMargin": 0,
         "qrLeftMargin": 0,
-        "qrScale": 8
+        "qrScale": 8,
+        "imageUrl": ""
       }
     },
     {
       "type": 0,
       "text": "姓名：allever",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8
       }
     },
     {
       "type": 0,
       "text": "证号：11******11",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8
       }
     },
     {
       "type": 0,
       "text": "日期：2019/07/03 11:31:20",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8
       }
     },
     {
       "type": 0,
       "text": "当前借阅：《红楼梦》、《大耳朵图图》",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8
       }
     },
     {
@@ -95,32 +52,12 @@
       "type": 0,
       "text": "亲爱的读者，您当前办证已超过 %s 天，当前已借阅 %s 册，还可借阅 %s 册，截至 %s 累计借阅图书共 %s 册，节省购书成本约 %s 元。体验更多信息内容请扫描下方二维码关注图书馆公众号。",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8
       }
     },
     {
       "type": 1,
       "text": "baidu.com",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
         "qrLeftMargin": 26,
         "qrScale": 8
       }
@@ -129,17 +66,6 @@
       "type": 2,
       "text": "",
       "config": {
-        "blob": 0,
-        "align": 0,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8,
         "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
       }
     }
