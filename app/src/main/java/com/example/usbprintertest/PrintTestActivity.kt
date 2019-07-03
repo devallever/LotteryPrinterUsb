@@ -23,14 +23,12 @@ class PrintTestActivity : Activity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_print_test)
 
-        ToastUtils.initToast(this)
+        ToastUtil.initToast(this)
 
         initData()
         initView()
 
-        PrintManager.registUSBReceiver(this)
-        PrintManager.connectPrinter(this)
-
+        PrintManager.initPrinter(this)
     }
 
     override fun onDestroy() {
@@ -98,10 +96,10 @@ class PrintTestActivity : Activity(), View.OnClickListener {
 
         val printResult = PrintManager.appendString(title, PrintManager.PRINT_MIDDLE, true)
             .appendString(content)
-            .appendQRCode(qrCodeContent, 26, 8)
-            .appendString("")
-            .appendImage(this, filePath)
-            .print(this)
+//            .appendQRCode(qrCodeContent, 26, 8)
+//            .appendString("")
+//            .appendImage(this, filePath)
+            .print()
         if (printResult) {
             Log.d(TAG, "打印成功")
         } else {

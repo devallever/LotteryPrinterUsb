@@ -1,4 +1,4 @@
-package com.example.usbprintertest.util;
+package com.example.usbprintertest;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import com.example.usbprintertest.util.T;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -36,8 +37,8 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 
 
-public class Utils {
-	public Utils(){
+public class ImageUtils {
+	public ImageUtils(){
 		
 	}
 	

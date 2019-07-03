@@ -10,7 +10,7 @@ import android.widget.Toast;
  */
 public class T {
 
-	private static final String TAG = "ToastUtils";
+	private static final String TAG = "ToastUtil";
 
 	private T() {
 		/* cannot be instantiated */

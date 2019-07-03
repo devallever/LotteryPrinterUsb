@@ -1,7 +1,5 @@
 package com.example.usbprintertest;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,12 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import android.content.res.AssetManager;
-import com.example.usbprintertest.util.Bills;
-import com.example.usbprintertest.util.Constant;
-import com.example.usbprintertest.util.MyAdapter;
-import com.example.usbprintertest.util.T;
-import com.example.usbprintertest.util.Utils;
+import com.example.usbprintertest.util.*;
 import com.printsdk.cmd.PrintCmd;
 import com.printsdk.usbsdk.UsbDriver;
 import com.printsdk.utils.PrintUtils;
@@ -32,21 +25,16 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.RadialGradient;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View.MeasureSpec;
 
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -479,7 +467,7 @@ public class MainActivity extends Activity {
         clickFlag = 1;
         showFileChooser();
         String bmpPath = mBmpPath_et.getText().toString().trim();
-        Utils.putValue(MainActivity.this, "path", bmpPath);
+        ImageUtils.putValue(MainActivity.this, "path", bmpPath);
     }
 
     // 选择img图片文件
@@ -831,7 +819,7 @@ public class MainActivity extends Activity {
     String sCmd = "1b 74 00 1c 2e 9D 1b 64 05"; //1B 40 1C 26
 
     private void printSpecialData(String data) {
-        byte[] label = Utils.getHexCmd(data);
+        byte[] label = ImageUtils.getHexCmd(data);
         if (label.length != 0) {
             mUsbDriver.write(label, label.length);
             mUsbDriver.write(PrintCmd.PrintCutpaper(0)); // 切纸类型
@@ -1039,21 +1027,21 @@ public class MainActivity extends Activity {
         list2 = getSeatColHtData(str2);
         list3 = getSeatColHtData(str3);
         list4 = getSeatColHtData(str4);
-        String Col1 = Utils.intToHexString(Integer.valueOf(col1), 1) + " ";// 转换第1列
-        String Col2 = Utils.intToHexString(Integer.valueOf(col2), 1) + " ";// 转换第2列
-        String Col3 = Utils.intToHexString(Integer.valueOf(col3), 1) + " ";// 转换第3列
+        String Col1 = ImageUtils.intToHexString(Integer.valueOf(col1), 1) + " ";// 转换第1列
+        String Col2 = ImageUtils.intToHexString(Integer.valueOf(col2), 1) + " ";// 转换第2列
+        String Col3 = ImageUtils.intToHexString(Integer.valueOf(col3), 1) + " ";// 转换第3列
         for (int i = 0; i < 6; i++) {
             HTSeatStr1 = list1.get(i);
-            ht1 = Utils.stringTo16Hex(HTSeatStr1);
+            ht1 = ImageUtils.stringTo16Hex(HTSeatStr1);
             HTSeatStr2 = list2.get(i);
-            ht2 = Utils.stringTo16Hex(HTSeatStr2);
+            ht2 = ImageUtils.stringTo16Hex(HTSeatStr2);
             HTSeatStr3 = list3.get(i);
-            ht3 = Utils.stringTo16Hex(HTSeatStr3);
+            ht3 = ImageUtils.stringTo16Hex(HTSeatStr3);
             HTSeatStr4 = list4.get(i);
-            ht4 = Utils.stringTo16Hex(HTSeatStr4);
+            ht4 = ImageUtils.stringTo16Hex(HTSeatStr4);
             String etstring = Col1 + Col2 + Col3 + "00 " + ht1 + "09 " +
                     ht2 + "09 " + ht3 + "09 " + ht4 + "0A 0A";
-            byte[] seat = Utils.hexStr2Bytesnoenter(etstring);
+            byte[] seat = ImageUtils.hexStr2Bytesnoenter(etstring);
             if (etstring != null && !"".equals(etstring)) {
                 mUsbDriver.write(PrintCmd.SetAlignment(align));
                 mUsbDriver.write(PrintCmd.SetLinespace(linespace));
@@ -1116,10 +1104,10 @@ public class MainActivity extends Activity {
             showMessage(getString(R.string.The_path_cannot_be_empty));
             return;
         }
-        Bitmap inputBmp = Utils.getBitmapData(imgPath);
+        Bitmap inputBmp = ImageUtils.getBitmapData(imgPath);
         if (inputBmp == null)
             return;
-        int[] data = Utils.getPixelsByBitmap(inputBmp);
+        int[] data = ImageUtils.getPixelsByBitmap(inputBmp);
         mUsbDriver.write(PrintCmd.PrintString("\n" + Constant.m_PrintDataCN + "\n", 0), mUsbDev);
         mUsbDriver.write(PrintCmd.PrintDiskImagefile(data, inputBmp.getWidth(), inputBmp.getHeight()));
         setFeedCut(cutter, Integer.valueOf(iline));
@@ -1153,13 +1141,13 @@ public class MainActivity extends Activity {
 
     private void printDiskImgByViewBitmap() {
         Bitmap viewBitmap = makeView2Bitmap(LL_ALL);
-        String path = Utils.saveMypic(viewBitmap, MainActivity.this);
+        String path = ImageUtils.saveMypic(viewBitmap, MainActivity.this);
         if (path == null || "".equals(path)) {
             return;
         }
-        Bitmap inputBmp = Utils.getBitmapData(path); // 通过路径获取Bitmap
-        Bitmap bitmap = Utils.getSinglePic(inputBmp);
-        int[] data = Utils.getPixelsByBitmap(bitmap);
+        Bitmap inputBmp = ImageUtils.getBitmapData(path); // 通过路径获取Bitmap
+        Bitmap bitmap = ImageUtils.getSinglePic(inputBmp);
+        int[] data = ImageUtils.getPixelsByBitmap(bitmap);
         mUsbDriver.write(PrintCmd.PrintDiskImagefile(data, bitmap.getWidth(), bitmap.getHeight()));
         setFeedCut(cutter, Integer.valueOf(iline));
     }
@@ -1207,13 +1195,13 @@ public class MainActivity extends Activity {
             mUsbDriver.write(PrintCmd.PrintDiskImagefile(data, 640, 640));
             // 其他图片文件路径打印
         } else {
-            Bitmap inputBmp = Utils.getBitmapData(imgPath);
-//			Bitmap inputBmp = Utils.getQRcode(qrcode1, 200, 200);
-//			Bitmap inputBmp = Utils.getQRcode(qrcode1, 300, 300);
+            Bitmap inputBmp = ImageUtils.getBitmapData(imgPath);
+//			Bitmap inputBmp = ImageUtils.getQRcode(qrcode1, 200, 200);
+//			Bitmap inputBmp = ImageUtils.getQRcode(qrcode1, 300, 300);
             if (inputBmp == null)
                 return;
-            Bitmap bm = Utils.getSinglePic(inputBmp);
-            int[] data = Utils.getPixelsByBitmap(bm);
+            Bitmap bm = ImageUtils.getSinglePic(inputBmp);
+            int[] data = ImageUtils.getPixelsByBitmap(bm);
             mUsbDriver.write(PrintCmd.SetLeftmargin(Integer.valueOf(iline)));
             mUsbDriver.write(PrintCmd.PrintDiskImagefile(data, bm.getWidth(),
                     bm.getHeight()));
@@ -1344,7 +1332,7 @@ public class MainActivity extends Activity {
     private boolean downloadNvBmp() {
         String loadPath = mBmpPath_et.getText().toString().trim();
         if (!"".equalsIgnoreCase(loadPath)) {
-            int inums = Utils.Count(loadPath, ";");
+            int inums = ImageUtils.Count(loadPath, ";");
             byte[] bValue = PrintCmd.SetNvbmp(inums, loadPath);
             if (bValue != null) {
                 mUsbDriver.write(bValue, bValue.length);
@@ -1374,9 +1362,9 @@ public class MainActivity extends Activity {
                 if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
-                    String path = Utils.getPath(MainActivity.this, uri);
+                    String path = ImageUtils.getPath(MainActivity.this, uri);
                     if (clickFlag == 1) {
-                        String sharePath = Utils.getValue(MainActivity.this, "path", "").toString().trim();
+                        String sharePath = ImageUtils.getValue(MainActivity.this, "path", "").toString().trim();
                         if (!"".equalsIgnoreCase(sharePath)) {
                             mBmpPath_et.setText(sharePath + path + ";");
                         } else {
@@ -1411,7 +1399,7 @@ public class MainActivity extends Activity {
         if (checkStatus(iStatus) != 0)
             return;
         String etstring = "";
-        if (Utils.isZh(MainActivity.this)) {
+        if (ImageUtils.isZh(MainActivity.this)) {
             etstring = Constant.m_PrintDataCN;
         } else {
             etstring = Constant.TESTDATA_US;
@@ -1453,7 +1441,7 @@ public class MainActivity extends Activity {
         codeStr = etWrite.getText().toString().trim();
         if ("".equalsIgnoreCase(codeStr))
             codeStr = Constant.WebAddress;
-        if (Utils.isZh(this)) {
+        if (ImageUtils.isZh(this)) {
             title = Constant.TITLE_CN;
             strData = Constant.STRDATA_CN;
         } else {
@@ -1812,7 +1800,7 @@ public class MainActivity extends Activity {
             blackMarkError = "", paperExh = "", paperWillExh = "", abnormal = "";
 
     private void getMsgByLanguage() {
-        if (Utils.isZh(this)) {
+        if (ImageUtils.isZh(this)) {
             receive = Constant.Receive_CN;
             state = Constant.State_CN;
             normal = Constant.Normal_CN;
@@ -2064,7 +2052,7 @@ public class MainActivity extends Activity {
         if (checkStatus(iStatus) != 0)
             return;
         String etstring = "";
-        if (Utils.isZh(MainActivity.this)) {
+        if (ImageUtils.isZh(MainActivity.this)) {
             etstring = Constant.TESTDATA_CN;
         } else {
             etstring = Constant.TESTDATA_US;

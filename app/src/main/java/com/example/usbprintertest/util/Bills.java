@@ -8,9 +8,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
+import com.example.usbprintertest.ImageUtils;
 import com.printsdk.cmd.PrintCmd;
 import com.printsdk.usbsdk.UsbDriver;
-import com.printsdk.utils.PrintUtils;
 
 public class Bills {
 	// 国际化标志时间格式类
@@ -465,13 +465,13 @@ public class Bills {
  			T.showShort(context, "路径或者打印数量不能为空!");
  			return;
  		}
-		Bitmap inputBmp = Utils.getBitmapData(imgPath);
+		Bitmap inputBmp = ImageUtils.getBitmapData(imgPath);
 		if(inputBmp == null)
  			return;
-		int[] data = Utils.getPixelsByBitmap(inputBmp);
+		int[] data = ImageUtils.getPixelsByBitmap(inputBmp);
 		for(int i= 0;i<count;i++){
 			backPaper(mUsbDriver,70);// 退纸
-			new Utils().sleep(200);
+			new ImageUtils().sleep(200);
 			mUsbDriver.write(PrintCmd.SetLeftmargin(25));
 			mUsbDriver.write(PrintCmd.PrintDiskImagefile(data,inputBmp.getWidth(),inputBmp.getHeight()));
 			mUsbDriver.write(PrintCmd.PrintMarkposition());

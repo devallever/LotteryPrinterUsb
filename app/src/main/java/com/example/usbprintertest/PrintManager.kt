@@ -9,7 +9,6 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Parcelable
 import android.util.Log
-import com.example.usbprintertest.util.Utils
 import com.printsdk.cmd.PrintCmd
 import com.printsdk.usbsdk.UsbDriver
 import java.io.BufferedInputStream
@@ -43,8 +42,13 @@ object PrintManager {
 
     private var connectedStatus = false
 
-    fun connectPrinter(context: Context) {
+    fun initPrinter(context: Context) {
+        registUSBReceiver(context)
+        connectPrinter(context)
         setDefaultPrinterParameters()
+    }
+
+    private fun connectPrinter(context: Context) {
         try {
             if (mUsbDriver?.isConnected == false) {
                 // USB线未连接
@@ -71,10 +75,12 @@ object PrintManager {
                                 mUsbDev = mUsbDev2
                                 Log.d(TAG, "打印机2")
                             }
-                            ToastUtils.show(context.getString(R.string.USB_Driver_Success))
+//                            Log.d(TAG, context.getString(R.string.usb_driver_success))
+                            ToastUtil.show(context.getString(R.string.USB_Driver_Success))
                             return@map
                         } else {
-                            ToastUtils.show(context.getString(R.string.USB_Driver_Failed))
+//                            Log.d(TAG, context.getString(R.string.usb_driver_success))
+                            ToastUtil.show(context.getString(R.string.USB_Driver_Failed))
                             return@map
                         }
                     }
@@ -84,7 +90,7 @@ object PrintManager {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            ToastUtils.show(e.message.toString())
+            ToastUtil.show(e.message.toString())
         }
     }
 
@@ -125,8 +131,8 @@ object PrintManager {
         if (!createFile(context, filePath)) {
             return this
         }
-        val inputBmp = Utils.getBitmapData(filePath) ?: return this
-        val data = Utils.getPixelsByBitmap(inputBmp)
+        val inputBmp = ImageUtils.getBitmapData(filePath) ?: return this
+        val data = ImageUtils.getPixelsByBitmap(inputBmp)
         mUsbDriver?.write(PrintCmd.PrintDiskImagefile(data, inputBmp.width, inputBmp.height))
         return this
     }
@@ -134,6 +140,7 @@ object PrintManager {
     fun canPrint(context: Context): Boolean {
         val printEndStatus = PrintCmd.getPrintEndStatus(mUsbDriver)
         val printerStatus = getPrinterStatus(mUsbDev)
+        val pst = PrintCmd.CheckStatus(PrintCmd.GetStatus())
         Log.d(TAG, "printerStatus = $printerStatus")
         return if (printEndStatus != -1) {
             val checkStatus = checkStatus(context, printerStatus)
@@ -144,10 +151,7 @@ object PrintManager {
         }
     }
 
-    fun print(context: Context): Boolean {
-        if (!canPrint(context)) {
-            return false
-        }
+    fun print(): Boolean {
         try {
             // 走纸换行
             mUsbDriver?.write(PrintCmd.PrintFeedline(4))
@@ -163,7 +167,7 @@ object PrintManager {
     }
 
 
-    fun registUSBReceiver(context: Context) {
+    private fun registUSBReceiver(context: Context) {
         mUsbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
         mUsbDriver = UsbDriver(mUsbManager, context)
         val permissionIntent1 = PendingIntent.getBroadcast(
@@ -204,31 +208,31 @@ object PrintManager {
             }
             3 -> {
                 sMsg.append("打印头打开")
-                ToastUtils.show( "打印头打开")
+                ToastUtil.show("打印头打开")
             }
             4 -> {
                 sMsg.append("切刀未复位")
-                ToastUtils.show( "切刀未复位")
+                ToastUtil.show("切刀未复位")
             }
             5 -> {
                 sMsg.append("打印头过热")
-                ToastUtils.show( "打印头过热")
+                ToastUtil.show("打印头过热")
             }
             6 -> {
                 sMsg.append("黑标错误")
-                ToastUtils.show( "黑标错误")
+                ToastUtil.show("黑标错误")
             }
             7 -> {
                 sMsg.append("纸尽==缺纸")
-                ToastUtils.show( "纸尽==缺纸")
+                ToastUtil.show("纸尽==缺纸")
             }
             1 -> {
                 sMsg.append("打印机未连接或未上电")
-                ToastUtils.show( "打印机未连接或未上电")
+                ToastUtil.show("打印机未连接或未上电")
             }
             else -> {
                 sMsg.append("异常")
-                ToastUtils.show( "异常")
+                ToastUtil.show("异常")
             }
         }
         val message = sMsg.toString()
@@ -298,8 +302,6 @@ object PrintManager {
         val byteArrayOutputStream = ByteArrayOutputStream()
         val fileOutputStream = FileOutputStream(File(filepath))
         try {
-            //如果要跳过1个字节数，传的是1
-            //跳过数据头，读取源文件数据
             var len = -1
             var buffer = ByteArray(1024)
             while (bufferedInputStream.read(buffer).also { len = it } != -1) {
@@ -401,7 +403,7 @@ object PrintManager {
                             }
                         }
                     } else {
-                        ToastUtils.show("permission denied for device")
+                        ToastUtil.show("permission denied for device")
                     }
                 }
             }

@@ -5,7 +5,7 @@ import android.content.Context
 import android.widget.Toast
 
 @SuppressLint("StaticFieldLeak")
-object ToastUtils {
+object ToastUtil {
 
     private var mContext: Context? = null
 
