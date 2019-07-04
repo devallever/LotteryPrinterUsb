@@ -15,7 +15,20 @@
         "rightMargin": 0,
         "qrLeftMargin": 0,
         "qrScale": 8,
-        "imageUrl": ""
+        "imageUrl": "",
+        "tableIndexList": [
+        ],
+        "tableColumn": [
+          {
+            "data": []
+          },
+          {
+            "data": []
+          },
+          {
+            "data": []
+          }
+        ]
       }
     },
     {
