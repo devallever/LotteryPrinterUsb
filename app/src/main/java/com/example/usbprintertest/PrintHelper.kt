@@ -107,7 +107,6 @@ object PrintHelper {
                                 mImageConfig.add(it.config)
                             }
                         }
-                        Log.d(TAG, it.config.toString())
                     }
 
                     Log.d(TAG, "有 ${mImageConfig.size} 个图片")
@@ -174,13 +173,14 @@ object PrintHelper {
 
             if (index == mImageConfig.size - 1) {
                 Log.d(TAG, "所有任务完成")
+//                return@execute
 
                 if (!PrintManager.canPrint(context)) {
                     return@execute
                 }
 
                 //todo 遍历数据打印
-                mPrintDataList.map {
+                mPrintDataList.map { it ->
                     val config = it.config
                     when(it.type) {
                         0 -> {
@@ -223,6 +223,22 @@ object PrintHelper {
                             val fileName = MD5Util.string2MD5(config?.imageUrl?:"")
                             val path = path
                             PrintManager.appendImage(context, path)
+                        }
+                        3 -> {
+                            //表格
+                            val indexList = it.config?.tableIndexList
+                            val tableColumnList = it.config?.tableColumn
+                            val tableList = mutableListOf<MutableList<String>>()
+                            tableColumnList?.map {
+                                val data = it.data
+                                data?.let {
+                                    tableList.add(it)
+                                }
+                            }
+                            indexList?.let {
+                                PrintManager.appendTable(indexList, tableList)
+                            }
+
                         }
                         else -> {
 

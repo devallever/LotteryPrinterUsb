@@ -142,6 +142,78 @@ object PrintManager {
         return this
     }
 
+    fun appendTable(indexList: MutableList<Int>, dataList: MutableList<MutableList<String>>): PrintManager {
+        //第一部分
+        val dataPartOneBuilder = StringBuilder()
+        indexList.mapIndexed { index, it ->
+            // 转换第1列
+            dataPartOneBuilder.append(ImageUtils.intToHexString(Integer.valueOf(it), 1) + " ")
+            if (index == indexList.size - 1) {
+                dataPartOneBuilder.append("00 ")
+            }
+        }
+
+        val partOneData = dataPartOneBuilder.toString()
+        //列数
+        val columnCount = dataList.size
+        //行数
+        val rowCount = dataList[0].size
+
+        for (row in 0 until rowCount) {
+            val dataPartTwoBuilder = StringBuilder()
+            for (column in 0 until columnCount) {
+                val data = ImageUtils.stringTo16Hex(dataList[column][row])
+                if (column != columnCount - 1) {
+                    dataPartTwoBuilder.append(data + "09 ")
+                } else {
+                    dataPartTwoBuilder.append(data + "0A 0A")
+                }
+            }
+            val finalData = partOneData + dataPartTwoBuilder.toString()
+            val seat = ImageUtils.hexStr2Bytesnoenter(finalData)
+
+            if ("" != finalData) {
+                mUsbDriver?.write(PrintCmd.SetAlignment(0))
+                mUsbDriver?.write(PrintCmd.SetLinespace(40))
+                mUsbDriver?.write(
+                    PrintCmd.SetHTseat(seat, seat.size),
+                    seat.size, mUsbDev
+                )
+                mUsbDriver?.write(PrintCmd.PrintFeedline(0), mUsbDev)      // 走纸换行
+            }
+        }
+
+//        for (column in 0 until columnCount) {
+//            val dataPartTwoBuilder = StringBuilder()
+//            for (row in 0 until rowCount) {
+//                val data = ImageUtils.stringTo16Hex(dataList[column][row])
+//                if (row != rowCount - 1) {
+//                    dataPartTwoBuilder.append(data + "09 ")
+//                } else {
+//                    dataPartTwoBuilder.append(data + "0A 0A")
+//                }
+//            }
+//            val finalData = partOneData + dataPartTwoBuilder.toString()
+//            val seat = ImageUtils.hexStr2Bytesnoenter(finalData)
+//
+//            if ("" != finalData) {
+//                mUsbDriver?.write(PrintCmd.SetAlignment(0))
+//                mUsbDriver?.write(PrintCmd.SetLinespace(40))
+//                mUsbDriver?.write(
+//                    PrintCmd.SetHTseat(seat, seat.size),
+//                    seat.size, mUsbDev
+//                )
+//                mUsbDriver?.write(PrintCmd.PrintFeedline(0), mUsbDev)      // 走纸换行
+//            }
+//        }
+
+
+        dataList.mapIndexed { index, mutableList ->
+
+        }
+        return this
+    }
+
     /***
      * @param marginLeft 0 - 27
      * @param scale 放大 1 - 8

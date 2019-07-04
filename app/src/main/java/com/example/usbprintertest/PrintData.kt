@@ -19,6 +19,8 @@ class PrintConfig {
     var qrLeftMargin: Int = 0
     var qrScale: Int = 8
     var imageUrl: String = ""
+    var tableIndexList: MutableList<Int>? = null
+    var tableColumn: MutableList<TableColumn>? = null
 
     override fun toString(): String {
         return "\nblob[$blob]\n" +
@@ -34,4 +36,8 @@ class PrintConfig {
                 "qrScale[$qrScale]\n" +
                 "imageUrl[$imageUrl]\n"
     }
+}
+
+class TableColumn {
+    var data: MutableList<String>? = null
 }

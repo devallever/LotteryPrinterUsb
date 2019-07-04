@@ -53,7 +53,8 @@ class PrintTestActivity : Activity(), View.OnClickListener {
         when (v) {
             mBtnPrint -> {
 //                print()
-                val url = "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/print_config.json"
+                val url =
+                    "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/print_config.json"
                 PrintHelper.getPrintConfig(this, url)
             }
         }
@@ -98,13 +99,23 @@ class PrintTestActivity : Activity(), View.OnClickListener {
         val filePath =
             Environment.getExternalStorageDirectory().absolutePath + File.separator + packageName + File.separator + "logo.png"
 
+        val indexList = mutableListOf(27, 40)
+        val bookNameList = mutableListOf("当前借阅: ", "《红楼梦》", "《大耳朵图图》")
+        val returnDateList = mutableListOf("应还日期", "2019-10-30", "2019-10-30")
+        val remainDayList = mutableListOf("剩余天数", "30", "30")
+        val tableList = mutableListOf<MutableList<String>>()
+        tableList.add(bookNameList)
+        tableList.add(returnDateList)
+        tableList.add(remainDayList)
+
 
         val printResult = PrintManager.appendString(title, PrintManager.PRINT_MIDDLE, 1)
-            .appendString("姓名：$name 左边距 10", leftMargin = 10)
-            .appendString("证号：$readerId 左边距 0 间距 = 3", textMargin = 3)
-            .appendString("日期：$date 间距 = 2", textMargin = 2)
-            .appendString("当前借阅：$currentBorrowBooks")
-            .appendString("\n$tips 间距 = 0 斜体", italic = 1, lineHeight = 30)
+            .appendString("姓名：$name")
+            .appendString("证号：$readerId")
+            .appendString("日期：$date")
+            .appendTable(indexList, tableList)
+//            .appendString("当前借阅：$currentBorrowBooks")
+            .appendString("\n$tips")
 //            .appendString(content)
 //            .appendQRCode(qrCodeContent, 26, 8)
             .appendString("")

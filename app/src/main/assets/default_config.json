@@ -1,5 +1,6 @@
 {
   "config": {
+    //桌面打印配置
     "blob": 0,
     "align": 0,
     "textScale": 0,
@@ -10,6 +11,21 @@
     "leftMargin": 0,
     "rightMargin": 0,
     "qrLeftMargin": 0,
-    "qrScale": 8
+    "qrScale": 8,
+    "tableIndexList": [
+      26,
+      40
+    ],
+    "tableColumn": [
+      {
+        "data": ["当前借阅：", "《红楼梦》", "《大耳朵图图》"]
+      },
+      {
+        "data": ["应还日期", "2019-10-30", "2019-10-30"]
+      },
+      {
+        "data": ["剩余天数", "30", "30"]
+      }
+    ]
   }
 }
