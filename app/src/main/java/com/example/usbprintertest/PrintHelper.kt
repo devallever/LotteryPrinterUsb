@@ -9,6 +9,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.BufferedInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.util.ArrayList
@@ -27,6 +29,11 @@ object PrintHelper {
 
 
     fun getPrintConfig(context: Context, url: String) {
+        getLocalPrintConfig(context)
+//        getNetPrintConfig(context, url)
+    }
+
+    private fun getNetPrintConfig(context: Context, url: String) {
         Fuel.get(url).responseString { _, _, result ->
             when (result) {
                 is Result.Failure -> {
@@ -68,6 +75,59 @@ object PrintHelper {
                 }
             }
         }
+    }
+
+    private fun getLocalPrintConfig(context: Context) {
+        EXECUTOR.execute {
+            val assetManager = context.assets
+            val inputStream = assetManager.open("print_config.json")
+            val bufferedInputStream = BufferedInputStream(inputStream)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            try {
+                var len = -1
+                val buffer = ByteArray(1024)
+                while (bufferedInputStream.read(buffer).also { len = it } != -1) {
+                    byteArrayOutputStream.write(buffer, 0, len)
+                }
+                val dataArray = byteArrayOutputStream.toByteArray()
+                val result = String(dataArray)
+                try {
+                    val json1 = JSONObject(result)
+                    val json = json1.getString("data")
+                    mPrintDataList.clear()
+                    mPrintDataList = Gson().fromJson(
+                        json, object : TypeToken<ArrayList<PrintData>>() {}.type
+                    )
+
+                    mImageConfig.clear()
+                    mPrintDataList.map {
+                        Log.d(TAG, it.text)
+                        if (it.type == 2) {
+                            if (it.config != null) {
+                                mImageConfig.add(it.config)
+                            }
+                        }
+                        Log.d(TAG, it.config.toString())
+                    }
+
+                    Log.d(TAG, "有 ${mImageConfig.size} 个图片")
+
+                    //todo 开启线程池执行下载图片
+                    mImageConfig.mapIndexed { index, printConfig ->
+                        downloadFile(context, printConfig.imageUrl, index)
+                    }
+
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            } finally {
+                bufferedInputStream.close()
+                byteArrayOutputStream.close()
+            }
+        }
+
     }
 
     private fun downloadFile(context: Context, url: String, index: Int) {
