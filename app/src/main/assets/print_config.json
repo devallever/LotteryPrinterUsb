@@ -142,6 +142,13 @@
       "type": 2,
       "text": "",
       "config": {
+        "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/tianjinzhongxin.jpg"
+      }
+    },
+    {
+      "type": 2,
+      "text": "",
+      "config": {
         "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
       }
     }
