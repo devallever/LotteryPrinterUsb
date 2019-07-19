@@ -65,10 +65,12 @@ object PrintHelper {
 
                         Log.d(TAG, "有 ${mImageConfig.size} 个图片")
 
-                        //todo 开启线程池执行下载图片
+                        //下载图片
                         mImageConfig.mapIndexed { index, printConfig ->
                             downloadFile(context, printConfig.imageUrl, index)
                         }
+
+                        printData(context)
 
                     } catch (e: JSONException) {
                         e.printStackTrace()
