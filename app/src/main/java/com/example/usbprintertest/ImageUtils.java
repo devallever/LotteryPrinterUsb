@@ -8,12 +8,10 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.UUID;
 
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import com.example.usbprintertest.util.T;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -325,7 +323,7 @@ public class ImageUtils {
 	 * @return
 	 */
 	public static Bitmap getBitmapData(String imgPath) {
-		Bitmap bm = BitmapFactory.decodeFile(imgPath, getBitmapOption(1)); // 将图片的长和宽缩小为原来的1/2
+		Bitmap bm = BitmapFactory.decodeFile(imgPath, getBitmapOption(1));
 		return bm;
 	}
 

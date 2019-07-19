@@ -224,13 +224,16 @@ object PrintManager {
         return this
     }
 
-    fun appendImage(context: Context, filePath: String): PrintManager {
+    fun appendImage(context: Context, filePath: String, leftMargin: Int = 0): PrintManager {
         setDefaultPrinterParameters()
         if (!File(filePath).exists()) {
             return this
         }
         val inputBmp = ImageUtils.getBitmapData(filePath) ?: return this
         val data = ImageUtils.getPixelsByBitmap(inputBmp)
+        //左边距
+        val leftMargin = calcImageLeftMargin(inputBmp.width)
+        mUsbDriver?.write(PrintCmd.SetLeftmargin(leftMargin), mUsbDev)
         mUsbDriver?.write(PrintCmd.PrintDiskImagefile(data, inputBmp.width, inputBmp.height))
         return this
     }
@@ -264,6 +267,11 @@ object PrintManager {
         return true
     }
 
+    private fun calcImageLeftMargin(width: Int): Int {
+        val defaultPageWidth = 576
+        if (width >= defaultPageWidth) return 0
+        return (defaultPageWidth - width) / 2
+    }
 
     private fun registUSBReceiver(context: Context) {
         mUsbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager

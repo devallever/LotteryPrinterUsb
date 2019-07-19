@@ -99,6 +99,9 @@ class PrintTestActivity : Activity(), View.OnClickListener {
         val filePath =
             Environment.getExternalStorageDirectory().absolutePath + File.separator + packageName + File.separator + "logo.png"
 
+        val qrcodePath =
+            Environment.getExternalStorageDirectory().absolutePath + File.separator + packageName + File.separator + "tianjinzhongxin.jpg"
+
         val indexList = mutableListOf(27, 40)
         val bookNameList = mutableListOf("当前借阅: ", "《红楼梦》", "《大耳朵图图》")
         val returnDateList = mutableListOf("应还日期", "2019-10-30", "2019-10-30")
@@ -119,7 +122,8 @@ class PrintTestActivity : Activity(), View.OnClickListener {
 //            .appendString(content)
 //            .appendQRCode(qrCodeContent, 26, 8)
             .appendString("")
-//            .appendImage(this, filePath)
+            .appendImage(this, qrcodePath, 160)
+            .appendImage(this, filePath)
             .print()
         if (printResult) {
             Log.d(TAG, "打印成功")
