@@ -226,8 +226,7 @@ object PrintManager {
 
     fun appendImage(context: Context, filePath: String): PrintManager {
         setDefaultPrinterParameters()
-        //打印logo
-        if (!createFile(context, filePath)) {
+        if (!File(filePath).exists()) {
             return this
         }
         val inputBmp = ImageUtils.getBitmapData(filePath) ?: return this
@@ -379,18 +378,20 @@ object PrintManager {
     }
 
     private fun createFile(context: Context, filePath: String): Boolean {
-        val file = File(filePath)
-        if (file.exists()) {
-            file.delete()
-            file.createNewFile()
-        }
-
-        val parent = file.parentFile
-        if (!parent.exists()) {
-            parent.mkdirs()
-        }
-
-        return saveBitmapFile(context, filePath).length() != 0L
+        return File(filePath).exists()
+//        val file = File(filePath)
+//        if (file.exists()) {
+////            file.delete()
+////            file.createNewFile()
+//            return true
+//        }
+//
+//        val parent = file.parentFile
+//        if (!parent.exists()) {
+//            parent.mkdirs()
+//        }
+//
+//        return saveBitmapFile(context, filePath).length() != 0L
 
     }
 
