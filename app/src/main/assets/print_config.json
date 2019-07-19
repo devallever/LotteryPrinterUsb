@@ -125,14 +125,6 @@
       }
     },
     {
-      "type": 1,
-      "text": "baidu.com",
-      "config": {
-        "qrLeftMargin": 26,
-        "qrScale": 8
-      }
-    },
-    {
       "type": 0,
       "text": "",
       "config": {
