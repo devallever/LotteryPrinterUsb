@@ -11,10 +11,7 @@ import android.os.Parcelable
 import android.util.Log
 import com.printsdk.cmd.PrintCmd
 import com.printsdk.usbsdk.UsbDriver
-import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 
 object PrintManager {
 
@@ -46,52 +43,6 @@ object PrintManager {
         registUSBReceiver(context)
         connectPrinter(context)
         setDefaultPrinterParameters()
-    }
-
-    private fun connectPrinter(context: Context) {
-        try {
-            if (mUsbDriver?.isConnected == false) {
-                // USB线未连接
-                mUsbManager?.deviceList?.map {
-                    val device = it.value
-                    if (device.productId == PID11 && device.vendorId == VENDORID
-                        || device.productId == PID13 && device.vendorId == VENDORID
-                        || device.productId == PID15 && device.vendorId == VENDORID
-                    ) {
-                        connectedStatus = mUsbDriver?.usbAttached(device) == true
-                        if (!connectedStatus) {
-                            return@map
-                        }
-                        connectedStatus = mUsbDriver?.openUsbDevice(device) == true
-
-                        // 打开设备
-                        if (connectedStatus) {
-                            if (device.productId == PID11) {
-                                mUsbDev1 = device
-                                mUsbDev = mUsbDev1
-                                Log.d(TAG, "打印机1")
-                            } else {
-                                mUsbDev2 = device
-                                mUsbDev = mUsbDev2
-                                Log.d(TAG, "打印机2")
-                            }
-//                            Log.d(TAG, context.getString(R.string.usb_driver_success))
-                            ToastUtil.show(context.getString(R.string.USB_Driver_Success))
-                            return@map
-                        } else {
-//                            Log.d(TAG, context.getString(R.string.usb_driver_success))
-                            ToastUtil.show(context.getString(R.string.USB_Driver_Failed))
-                            return@map
-                        }
-                    }
-                }
-            } else {
-                connectedStatus = true
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ToastUtil.show(e.message.toString())
-        }
     }
 
     fun destroy(context: Context) {
@@ -224,14 +175,14 @@ object PrintManager {
         return this
     }
 
-    fun appendImage(context: Context, filePath: String, leftMargin: Int = 0): PrintManager {
+    fun appendImage(filePath: String): PrintManager {
         setDefaultPrinterParameters()
         if (!File(filePath).exists()) {
             return this
         }
         val inputBmp = ImageUtils.getBitmapData(filePath) ?: return this
         val data = ImageUtils.getPixelsByBitmap(inputBmp)
-        //左边距
+        //设置左边距居中
         val leftMargin = calcImageLeftMargin(inputBmp.width)
         mUsbDriver?.write(PrintCmd.SetLeftmargin(leftMargin), mUsbDev)
         mUsbDriver?.write(PrintCmd.PrintDiskImagefile(data, inputBmp.width, inputBmp.height))
@@ -241,7 +192,6 @@ object PrintManager {
     fun canPrint(context: Context): Boolean {
         val printEndStatus = PrintCmd.getPrintEndStatus(mUsbDriver)
         val printerStatus = getPrinterStatus(mUsbDev)
-        val pst = PrintCmd.CheckStatus(PrintCmd.GetStatus())
         Log.d(TAG, "printerStatus = $printerStatus")
         return if (printEndStatus != -1) {
             val checkStatus = checkStatus(context, printerStatus)
@@ -265,6 +215,50 @@ object PrintManager {
             return false
         }
         return true
+    }
+
+    private fun connectPrinter(context: Context) {
+        try {
+            if (mUsbDriver?.isConnected == false) {
+                // USB线未连接
+                mUsbManager?.deviceList?.map {
+                    val device = it.value
+                    if (device.productId == PID11 && device.vendorId == VENDORID
+                        || device.productId == PID13 && device.vendorId == VENDORID
+                        || device.productId == PID15 && device.vendorId == VENDORID
+                    ) {
+                        connectedStatus = mUsbDriver?.usbAttached(device) == true
+                        if (!connectedStatus) {
+                            return@map
+                        }
+                        connectedStatus = mUsbDriver?.openUsbDevice(device) == true
+
+                        // 打开设备
+                        if (connectedStatus) {
+                            if (device.productId == PID11) {
+                                mUsbDev1 = device
+                                mUsbDev = mUsbDev1
+                                Log.d(TAG, "打印机1")
+                            } else {
+                                mUsbDev2 = device
+                                mUsbDev = mUsbDev2
+                                Log.d(TAG, "打印机2")
+                            }
+                            ToastUtil.show(context.getString(R.string.usb_driver_success))
+                            return@map
+                        } else {
+                            ToastUtil.show(context.getString(R.string.usb_driver_fail))
+                            return@map
+                        }
+                    }
+                }
+            } else {
+                connectedStatus = true
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ToastUtil.show(e.message.toString())
+        }
     }
 
     private fun calcImageLeftMargin(width: Int): Int {
@@ -383,49 +377,6 @@ object PrintManager {
             status = PrintCmd.CheckStatus4(bRead4[0])
         }
         return status
-    }
-
-    private fun createFile(context: Context, filePath: String): Boolean {
-        return File(filePath).exists()
-//        val file = File(filePath)
-//        if (file.exists()) {
-////            file.delete()
-////            file.createNewFile()
-//            return true
-//        }
-//
-//        val parent = file.parentFile
-//        if (!parent.exists()) {
-//            parent.mkdirs()
-//        }
-//
-//        return saveBitmapFile(context, filePath).length() != 0L
-
-    }
-
-    private fun saveBitmapFile(context: Context, filepath: String): File {
-        val assetManager = context.assets
-        val inputStream = assetManager.open("logo1.png")
-        val bufferedInputStream = BufferedInputStream(inputStream)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        val fileOutputStream = FileOutputStream(File(filepath))
-        try {
-            var len = -1
-            var buffer = ByteArray(1024)
-            while (bufferedInputStream.read(buffer).also { len = it } != -1) {
-                byteArrayOutputStream.write(buffer, 0, len)
-            }
-            fileOutputStream.write(byteArrayOutputStream.toByteArray())
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        } finally {
-            bufferedInputStream.close()
-            byteArrayOutputStream.close()
-            fileOutputStream.close()
-        }
-
-
-        return File(filepath)
     }
 
     private fun setDefaultPrinterParameters() {

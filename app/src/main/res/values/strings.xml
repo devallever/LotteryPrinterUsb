@@ -138,8 +138,8 @@
     <string name="Get_status">Get status</string>
     <string name="CutPaper">CutPaper</string> -->
     
-    <string name="USB_Driver_Success">USB driver success</string>
-    <string name="USB_Driver_Failed">USB driver failed</string>
+    <string name="usb_driver_success">USB driver success</string>
+    <string name="usb_driver_fail">USB driver failed</string>
     <string name="PrintComplete">Print complete!</string>
     <string name="PrintException">Printer exception,please try again!</string>
     

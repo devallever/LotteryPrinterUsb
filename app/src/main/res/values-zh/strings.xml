@@ -133,8 +133,8 @@
     <string name="Get_status">获取状态</string>
     <string name="CutPaper">全&#160;&#160;&#160;&#160;切</string> -->
     
-    <string name="USB_Driver_Success">驱动成功</string>
-    <string name="USB_Driver_Failed">驱动失败</string>
+    <string name="usb_driver_success">驱动成功</string>
+    <string name="usb_driver_fail">驱动失败</string>
     <string name="PrintComplete">打印完成!</string>
     <string name="PrintException">打印机异常，请重试!</string>
     

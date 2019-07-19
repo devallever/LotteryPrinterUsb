@@ -356,10 +356,10 @@ public class MainActivity extends Activity {
                                 mUsbDev2 = device;
                                 mUsbDev = mUsbDev2;
                             }
-                            T.showShort(this, getString(R.string.USB_Driver_Success));
+                            T.showShort(this, getString(R.string.usb_driver_success));
                             break;
                         } else {
-                            T.showShort(this, getString(R.string.USB_Driver_Failed));
+                            T.showShort(this, getString(R.string.usb_driver_success));
                             break;
                         }
                     }
@@ -1002,10 +1002,10 @@ public class MainActivity extends Activity {
     ArrayList<String> list1 = null;
     ArrayList<String> list2 = null;
     ArrayList<String> list3 = null;
-//    ArrayList<String> list4 = null;
+    //    ArrayList<String> list4 = null;
 //    ArrayList<String> list5 = null;
-    String[] str1 = {"《四四四四》", "《五五五五五》", "《六六六六六六》", "《七七七七七七七》", "《八八八八八八八八》", "《九九九九九九九九九》","《十十十十十十十十十十》", "《十一一一一一一一一一一》", "《十二二二二二二二二二二二》", };
-    String[] str2 = {"2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30","2019-10-30", "2019-10-30", "2019-10-30"};
+    String[] str1 = {"666666666666", "77777777777777", "8888888888888888", "999999999999999999", "00000000000000000000", "1111111111111111111111", "222222222222222222222222", "33333333333333333333333333", "4444444444444444444444444444"};
+    String[] str2 = {"2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30", "2019-10-30"};
     String[] str3 = {"A-", "A+", "A+", "A+", "A-", "B-", "A+", "A", "A+"};
 //    String[] str4 = {"陈老师", "周老师", "吴老师", "张老师", "冯老师", "李老师", "张老师", "邓老师", "王老师"};
 //    String[] str5 = {"陈老师", "周老师", "吴老师", "张老师", "冯老师", "李老师", "张老师", "邓老师", "王老师"};
@@ -1023,12 +1023,12 @@ public class MainActivity extends Activity {
     String HTSeatStr1 = "";
     String HTSeatStr2 = "";
     String HTSeatStr3 = "";
-//    String HTSeatStr4 = "";
+    //    String HTSeatStr4 = "";
 //    String HTSeatStr5 = "";
     String ht1, ht2, ht3 = "";
 
-//    private void setTransData(String col1, String col2, String col3, String col4, UsbDevice usbDev) {
-private void setTransData(String col1, String col2, UsbDevice usbDev) {
+    //    private void setTransData(String col1, String col2, String col3, String col4, UsbDevice usbDev) {
+    private void setTransData(String col1, String col2, UsbDevice usbDev) {
         list1 = getSeatColHtData(str1);
         list2 = getSeatColHtData(str2);
         list3 = getSeatColHtData(str3);
@@ -1041,10 +1041,13 @@ private void setTransData(String col1, String col2, UsbDevice usbDev) {
         for (int i = 0; i < list1.size(); i++) {
             HTSeatStr1 = list1.get(i);
             ht1 = ImageUtils.stringTo16Hex(HTSeatStr1);
+            Log.d(TAG, "内容1: [" + HTSeatStr1 + "] -> [" + ht1 +  "]");
             HTSeatStr2 = list2.get(i);
             ht2 = ImageUtils.stringTo16Hex(HTSeatStr2);
+            Log.d(TAG, "内容2: [" + HTSeatStr2 + "] -> [" + ht2 +  "]");
             HTSeatStr3 = list3.get(i);
             ht3 = ImageUtils.stringTo16Hex(HTSeatStr3);
+            Log.d(TAG, "内容3: [" + HTSeatStr3 + "] -> [" + ht3 +  "]");
 //            HTSeatStr4 = list4.get(i);
 //            ht4 = ImageUtils.stringTo16Hex(HTSeatStr4);
 //            HTSeatStr5 = list5.get(i);
@@ -1052,8 +1055,8 @@ private void setTransData(String col1, String col2, UsbDevice usbDev) {
 //            String etstring = Col1 + Col2 + Col3 + Col4 + "00 " + ht1 + "09 " +
 //                    ht2 + "09 " + ht3 + "09 " + ht4 + "09 " + ht5 +  "0A 0A";
             String etstring = Col1 + Col2 + "00 " + ht1 + "09 " +
-                    ht2 + "09 " + ht3  +  "0A 0A";
-            Log.d(TAG, "etString = " + etstring);
+                    ht2 + "09 " + ht3 + "0A 0A";
+            Log.d(TAG, "EtsString = " + etstring);
             byte[] seat = ImageUtils.hexStr2Bytesnoenter(etstring);
             if (etstring != null && !"".equals(etstring)) {
                 mUsbDriver.write(PrintCmd.SetAlignment(align));

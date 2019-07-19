@@ -8,7 +8,6 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
@@ -38,46 +37,49 @@ object PrintHelper {
         Fuel.get(url).responseString { _, _, result ->
             when (result) {
                 is Result.Failure -> {
-                    val ex = result.error
                     Log.d(TAG, result.error.message)
                     ToastUtil.show("网络故障，请联系管理员，error：004")
                 }
 
                 is Result.Success -> {
-                    try {
-                        val json1 = JSONObject(result.get())
-                        val json = json1.getString("data")
-                        mPrintDataList.clear()
-                        mPrintDataList = Gson().fromJson(
-                            json, object : TypeToken<ArrayList<PrintData>>() {}.type
-                        )
-
-                        mImageConfig.clear()
-                        mPrintDataList.map {
-                            Log.d(TAG, it.text)
-                            if (it.type == 2) {
-                                if (it.config != null) {
-                                    mImageConfig.add(it.config)
-                                }
-                            }
-                            Log.d(TAG, it.config.toString())
-                        }
-
-                        Log.d(TAG, "有 ${mImageConfig.size} 个图片")
-
-                        //下载图片
-                        mImageConfig.mapIndexed { index, printConfig ->
-                            downloadFile(context, printConfig.imageUrl, index)
-                        }
-
-                        printData(context)
-
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
+                    handlePrintData(context, result.get())
                 }
             }
         }
+    }
+
+    private fun handlePrintData(context: Context, data: String) {
+        EXECUTOR.execute {
+            try {
+                val json1 = JSONObject(data)
+                val json = json1.getString("data")
+                mPrintDataList.clear()
+                mPrintDataList = Gson().fromJson(
+                    json, object : TypeToken<ArrayList<PrintData>>() {}.type
+                )
+
+                mImageConfig.clear()
+                mPrintDataList.map {
+                    Log.d(TAG, it.text)
+                    if (it.type == 2) {
+                        if (it.config != null) {
+                            mImageConfig.add(it.config)
+                        }
+                    }
+                    Log.d(TAG, it.config.toString())
+                }
+
+                //下载图片
+                mImageConfig.map {
+                    downloadFile(context, it.imageUrl)
+                }
+
+                printData(context)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
     }
 
     private fun getLocalPrintConfig(context: Context) {
@@ -94,36 +96,8 @@ object PrintHelper {
                 }
                 val dataArray = byteArrayOutputStream.toByteArray()
                 val result = String(dataArray)
-                try {
-                    val json1 = JSONObject(result)
-                    val json = json1.getString("data")
-                    mPrintDataList.clear()
-                    mPrintDataList = Gson().fromJson(
-                        json, object : TypeToken<ArrayList<PrintData>>() {}.type
-                    )
 
-                    mImageConfig.clear()
-                    mPrintDataList.map {
-                        Log.d(TAG, it.text)
-                        if (it.type == 2) {
-                            if (it.config != null) {
-                                mImageConfig.add(it.config)
-                            }
-                        }
-                    }
-
-                    Log.d(TAG, "有 ${mImageConfig.size} 个图片")
-
-                    //下载图片
-                    mImageConfig.mapIndexed { index, printConfig ->
-                        downloadFile(context, printConfig.imageUrl, index)
-                    }
-
-                    printData(context)
-
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
+                handlePrintData(context, result)
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             } finally {
@@ -136,6 +110,7 @@ object PrintHelper {
 
     private fun printData(context: Context) {
         if (!PrintManager.canPrint(context)) {
+            ToastUtil.show("打印机异常，无法打印")
             return
         }
 
@@ -145,20 +120,6 @@ object PrintHelper {
             when(it.type) {
                 0 -> {
                     //文本
-                    /***
-
-                    content: String,
-                    align: Int = PRINT_LEFT,
-                    blob: Int = 0,
-                    italic: Int = 0,
-                    underLine: Int = 0,
-                    scale: Int = 0,
-                    leftMargin: Int = 0,
-                    rightMargin: Int = 0,
-                    lineHeight: Int = 40,
-                    textMargin: Int = 0
-                    )
-                     */
                     if (config == null) {
                         PrintManager.appendString(it.text)
                     } else {
@@ -183,7 +144,7 @@ object PrintHelper {
                     val dir = Environment.getExternalStorageDirectory().absolutePath + File.separator + context.packageName
                     val fileName = MD5Util.string2MD5(it.config?.imageUrl?:"")
                     val path = dir + File.separator + fileName
-                    PrintManager.appendImage(context, path)
+                    PrintManager.appendImage(path)
 
                 }
                 3 -> {
@@ -211,7 +172,7 @@ object PrintHelper {
         PrintManager.print()
     }
 
-    private fun downloadFile(context: Context, url: String, index: Int) {
+    private fun downloadFile(context: Context, url: String) {
         Log.d(TAG, "URL = $url")
         val fileName = MD5Util.string2MD5(url)
         val dir = Environment.getExternalStorageDirectory().absolutePath + File.separator + context.packageName

@@ -122,8 +122,8 @@ class PrintTestActivity : Activity(), View.OnClickListener {
 //            .appendString(content)
 //            .appendQRCode(qrCodeContent, 26, 8)
             .appendString("")
-            .appendImage(this, qrcodePath, 160)
-            .appendImage(this, filePath)
+            .appendImage(qrcodePath)
+            .appendImage(filePath)
             .print()
         if (printResult) {
             Log.d(TAG, "打印成功")
