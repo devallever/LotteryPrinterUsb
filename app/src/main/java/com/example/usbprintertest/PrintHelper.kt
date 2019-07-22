@@ -84,28 +84,32 @@ object PrintHelper {
 
     private fun getLocalPrintConfig(context: Context) {
         EXECUTOR.execute {
-            val assetManager = context.assets
-            val inputStream = assetManager.open("print_config.json")
-            val bufferedInputStream = BufferedInputStream(inputStream)
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            try {
-                var len = -1
-                val buffer = ByteArray(1024)
-                while (bufferedInputStream.read(buffer).also { len = it } != -1) {
-                    byteArrayOutputStream.write(buffer, 0, len)
-                }
-                val dataArray = byteArrayOutputStream.toByteArray()
-                val result = String(dataArray)
-
-                handlePrintData(context, result)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            } finally {
-                bufferedInputStream.close()
-                byteArrayOutputStream.close()
-            }
+            val result = readTextAssetsFile(context, "print_config.json")
+            handlePrintData(context, result)
         }
+    }
 
+    private fun readTextAssetsFile(context: Context, path: String): String {
+        var result = ""
+        val assetManager = context.assets
+        val inputStream = assetManager.open(path)
+        val bufferedInputStream = BufferedInputStream(inputStream)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        try {
+            var len = -1
+            val buffer = ByteArray(1024)
+            while (bufferedInputStream.read(buffer).also { len = it } != -1) {
+                byteArrayOutputStream.write(buffer, 0, len)
+            }
+            val dataArray = byteArrayOutputStream.toByteArray()
+            result = String(dataArray)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        } finally {
+            bufferedInputStream.close()
+            byteArrayOutputStream.close()
+        }
+        return result
     }
 
     private fun printData(context: Context) {

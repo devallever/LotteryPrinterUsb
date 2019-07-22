@@ -53,9 +53,10 @@ class PrintTestActivity : Activity(), View.OnClickListener {
         when (v) {
             mBtnPrint -> {
 //                print()
+                val testUrl = "http://rc.interlib.com.cn:8088/rcrobotsite//web/api/rcrobot/print/rule/getFilledFormatJson.html?libcode=ETJ022005&deviceId=1111&rdid=441284199304265211&tdsourcetag=s_pcqq_aiomsg"
                 val url =
                     "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/print_config.json"
-                PrintHelper.getPrintConfig(this, url)
+                PrintHelper.getPrintConfig(this, testUrl)
             }
         }
     }
