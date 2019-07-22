@@ -29,8 +29,8 @@ object PrintHelper {
 
 
     fun getPrintConfig(context: Context, url: String) {
-        getLocalPrintConfig(context)
-//        getNetPrintConfig(context, url)
+//        getLocalPrintConfig(context)
+        getNetPrintConfig(context, url)
     }
 
     private fun getNetPrintConfig(context: Context, url: String) {
@@ -51,8 +51,13 @@ object PrintHelper {
     private fun handlePrintData(context: Context, data: String) {
         EXECUTOR.execute {
             try {
-                val json1 = JSONObject(data)
-                val json = json1.getString("data")
+                //local
+//                val json1 = JSONObject(data)
+//                val json = json1.getString("data")
+                //server
+                val responseJson = JSONObject(data)
+                val jsonDataObj = responseJson.getJSONObject("data")
+                val json = jsonDataObj.getString("data")
                 mPrintDataList.clear()
                 mPrintDataList = Gson().fromJson(
                     json, object : TypeToken<ArrayList<PrintData>>() {}.type

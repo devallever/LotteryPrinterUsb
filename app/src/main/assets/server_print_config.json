@@ -1,0 +1,155 @@
+{
+  "data": [
+    {
+      "config": {
+        "align": 1,
+        "blob": 1,
+        "imageUrl": "",
+        "italic": 0,
+        "leftMargin": 0,
+        "lineSpace": 40,
+        "qrLeftMargin": 0,
+        "qrScale": 8,
+        "rightMargin": 0,
+        "tableColumn": [
+          {
+            "data": []
+          },
+          {
+            "data": []
+          },
+          {
+            "data": []
+          }
+        ],
+        "tableIndexList": [],
+        "textScale": 0,
+        "textSpace": 0,
+        "underLine": 0
+      },
+      "key": "title",
+      "remark": "中心友好图书馆-个人借阅凭条",
+      "text": "个人借阅凭条",
+      "type": 0
+    },
+    {
+      "config": {},
+      "text": "",
+      "type": 0
+    },
+    {
+      "config": {},
+      "key": "rdName",
+      "remark": "姓名：allever",
+      "text": "姓名：${rdName}",
+      "type": 0
+    },
+    {
+      "config": {},
+      "key": "rdid",
+      "remark": "证号：11******11",
+      "text": "证号：${rdid}",
+      "type": 0
+    },
+    {
+      "config": {},
+      "key": "printTime",
+      "remark": "日期：2019/07/03 11:31:20",
+      "text": "${printTime}",
+      "type": 0
+    },
+    {
+      "config": {},
+      "key": "line1",
+      "remark": "表头：当前借阅：\t\t应还日期\t剩余天数",
+      "text": "当前借阅：\t\t应还日期\t剩余天数",
+      "type": 0
+    },
+    {
+      "config": {},
+      "key": "book",
+      "remark": "《楼》\t\t\t2019-10-31\t    3",
+      "text": "${book}",
+      "type": 0
+    },
+    {
+      "config": {
+        "tableColumn": [
+          {
+            "data": [
+              "当前借阅：",
+              "《红楼梦》",
+              "《大耳朵贴图》"
+            ]
+          },
+          {
+            "data": [
+              "应还日期",
+              "2019-10-30",
+              "2019-10-30"
+            ]
+          },
+          {
+            "data": [
+              "剩余天数",
+              "30",
+              "30"
+            ]
+          }
+        ],
+        "tableIndexList": [
+          24,
+          40
+        ]
+      },
+      "key": "bookTable",
+      "remark": "书籍表格",
+      "text": "${bookTable}",
+      "type": 3
+    },
+    {
+      "config": {},
+      "remark": "空行",
+      "text": "",
+      "type": 0
+    },
+    {
+      "config": {},
+      "key": "line2",
+      "remark": "亲爱的读者，您当前办证已超过 ${registerDays} 天，当前已借阅 ${currentBorrowCount} 册，还可借阅 ${canBorrowCount} 册，截至 ${deadLine} 累计借阅图书共 ${emptyCount} 册，节省购书成本约 ${emptyCount} 元。体验更多信息内容请扫描下方二维码关注图书馆公众号。",
+      "text": "${line2}",
+      "type": 0
+    },
+    {
+      "config": {},
+      "remark": "空行",
+      "text": "",
+      "type": 0
+    },
+    {
+      "config": {
+        "qrLeftMargin": 26,
+        "qrScale": 8
+      },
+      "key": "qrcode",
+      "remark": "二维码,baidu.com",
+      "text": "${qrcode}",
+      "type": 1
+    },
+    {
+      "config": {},
+      "remark": "空行",
+      "text": "",
+      "type": 0
+    },
+    {
+      "config": {
+        "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
+      },
+      "key": "logoUrl",
+      "remark": "图书馆logo,页尾",
+      "text": "${logoUrl}",
+      "type": 2
+    }
+  ]
+}
