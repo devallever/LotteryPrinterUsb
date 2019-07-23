@@ -29,8 +29,8 @@ object PrintHelper {
 
 
     fun getPrintConfig(context: Context, url: String) {
-//        getLocalPrintConfig(context)
-        getNetPrintConfig(context, url)
+        getLocalPrintConfig(context)
+//        getNetPrintConfig(context, url)
     }
 
     private fun getNetPrintConfig(context: Context, url: String) {
@@ -123,8 +123,10 @@ object PrintHelper {
             return
         }
 
-        //todo 遍历数据打印
-        mPrintDataList.map { it ->
+        for (it in mPrintDataList) {
+            if (it.hidden == "1") {
+                continue
+            }
             val config = it.config
             when(it.type) {
                 0 -> {
@@ -177,6 +179,61 @@ object PrintHelper {
                 }
             }
         }
+
+//        //todo 遍历数据打印
+//        mPrintDataList.map { it ->
+//            val config = it.config
+//            when(it.type) {
+//                0 -> {
+//                    //文本
+//                    if (config == null) {
+//                        PrintManager.appendString(it.text)
+//                    } else {
+//                        PrintManager.appendString(it.text,
+//                            align = config.align,
+//                            blob = config.blob,
+//                            italic = config.italic,
+//                            underLine = config.underLine,
+//                            scale = config.textScale,
+//                            leftMargin = config.leftMargin,
+//                            rightMargin = config.rightMargin,
+//                            lineHeight = config.lineSpace,
+//                            textMargin = config.textSpace)
+//                    }
+//                }
+//                1 -> {
+//                    //二维码
+//                    PrintManager.appendQRCode(it.text, config?.qrLeftMargin?:0, config?.qrScale?:8)
+//                }
+//                2 -> {
+//                    //图片
+//                    val dir = Environment.getExternalStorageDirectory().absolutePath + File.separator + context.packageName
+//                    val fileName = MD5Util.string2MD5(it.config?.imageUrl?:"")
+//                    val path = dir + File.separator + fileName
+//                    PrintManager.appendImage(path)
+//
+//                }
+//                3 -> {
+//                    //表格
+//                    val indexList = it.config?.tableIndexList
+//                    val tableColumnList = it.config?.tableColumn
+//                    val tableList = mutableListOf<MutableList<String>>()
+//                    tableColumnList?.map {
+//                        val data = it.data
+//                        data?.let {
+//                            tableList.add(it)
+//                        }
+//                    }
+//                    indexList?.let {
+//                        PrintManager.appendTable(indexList, tableList)
+//                    }
+//
+//                }
+//                else -> {
+//
+//                }
+//            }
+//        }
 
         PrintManager.print()
     }

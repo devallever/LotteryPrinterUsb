@@ -1,8 +1,9 @@
 package com.example.usbprintertest
 
 class PrintData {
-    var type: Int = 0
-    var text: String = ""
+    val type: Int = 0
+    val text: String = ""
+    val hidden: String = "0"
     val config: PrintConfig? = null
 }
 
