@@ -1,142 +1,138 @@
 {
-  "data": [
-    {
-      "type": 0,
-      "text": "中心友好图书馆-个人借阅凭条",
-      "config": {
-        "blob": 1,
-        "align": 1,
-        "textScale": 0,
-        "underLine": 0,
-        "italic": 0,
-        "lineSpace": 40,
-        "textSpace": 0,
-        "leftMargin": 0,
-        "rightMargin": 0,
-        "qrLeftMargin": 0,
-        "qrScale": 8,
-        "imageUrl": "",
-        "tableIndexList": [
-        ],
-        "tableColumn": [
-          {
-            "data": []
-          },
-          {
-            "data": []
-          },
-          {
-            "data": []
-          }
-        ]
+  "flag": "suc",
+  "data": {
+    "data": [
+      {
+        "config": {
+          "align": 1,
+          "blob": 1,
+          "imageUrl": "",
+          "italic": 0,
+          "leftMargin": 0,
+          "lineSpace": 40,
+          "qrLeftMargin": 0,
+          "qrScale": 8,
+          "rightMargin": 0,
+          "tableColumn": [
+            {
+              "data": []
+            },
+            {
+              "data": []
+            },
+            {
+              "data": []
+            }
+          ],
+          "tableIndexList": [],
+          "textScale": 0,
+          "textSpace": 0,
+          "underLine": 0
+        },
+        "key": "title",
+        "remark": "中心友好图书馆-个人借阅凭条",
+        "text": "个人借阅凭条",
+        "type": 0
+      },
+      {
+        "config": {},
+        "text": "",
+        "type": 0
+      },
+      {
+        "config": {},
+        "key": "rdName",
+        "remark": "姓名：allever",
+        "text": "姓名：蒲祥测试",
+        "type": 0
+      },
+      {
+        "config": {},
+        "key": "rdid",
+        "remark": "证号：11******11",
+        "text": "证号：51******92",
+        "type": 0
+      },
+      {
+        "config": {},
+        "key": "printTime",
+        "remark": "日期：2019/07/03 11:31:20",
+        "text": "日期：2019-07-23 09:04:53",
+        "type": 0
+      },
+      {
+        "config": {},
+        "key": "line1",
+        "remark": "表头：当前借阅：\t\t应还日期\t剩余天数",
+        "text": "当前借阅：\t\t应还日期\t剩余天数",
+        "type": 0
+      },
+      {
+        "config": {
+          "align": 0,
+          "blob": 0,
+          "imageUrl": "",
+          "italic": 0,
+          "leftMargin": 0,
+          "lineSpace": 0,
+          "qrLeftMargin": 0,
+          "qrScale": 0,
+          "rightMargin": 0,
+          "tableColumn": [],
+          "tableIndexList": [],
+          "textScale": 0,
+          "textSpace": 0,
+          "underLine": 0
+        },
+        "key": "",
+        "remark": "",
+        "text": "《小王子子子子子子子子\n子子子子子》\t\t2019-09-17\t    55",
+        "type": 0
+      },
+      {
+        "config": {},
+        "remark": "空行",
+        "text": "",
+        "type": 0
+      },
+      {
+        "config": {},
+        "key": "line2",
+        "remark": "亲爱的读者，您当前办证已超过 天，当前已借阅 册，还可借阅 册，截至 累计借阅图书共 册，节省购书成本约 元。体验更多信息内容请扫描下方二维码关注图书馆公众号。",
+        "text": "亲爱的读者，您当前办证已超过 35 天，当前已借阅 1 册，还可借阅 70 册，截至 2019年07月23日 累计借阅图书共 165 册，节省购书成本约 0 元。体验更多信息内容请扫描下方二维码关注图书馆公众号。",
+        "type": 0
+      },
+      {
+        "config": {},
+        "remark": "空行",
+        "text": "",
+        "type": 0
+      },
+      {
+        "config": {
+          "qrLeftMargin": 20,
+          "qrScale": 8
+        },
+        "key": "qrcode",
+        "remark": "二维码,baidu.com",
+        "text": "http://weixin.qq.com/r/REOgpIrEs0LPKc7HbxbA",
+        "type": 1
+      },
+      {
+        "config": {},
+        "remark": "空行",
+        "text": "",
+        "type": 0
+      },
+      {
+        "config": {
+          "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
+        },
+        "key": "logoUrl",
+        "remark": "图书馆logo,页尾",
+        "text": "",
+        "type": 2
       }
-    },
-    {
-      "type": 0,
-      "text": "",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "姓名：allever",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "证号：11******11",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "日期：2019/07/03 11:31:20",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "当前借阅：\t\t应还日期\t剩余天数",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "《楼》\t\t\t2019-10-31\t    3",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "《大耳朵图图》\t\t2019-10-31\t    3",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "《Android开发艺术探索》\t2019-10-31\t    3",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "《安卓源码设计模式解析》2019-10-31\t    3",
-      "config": {
-      }
-    },
-    {
-      "type": 3,
-      "text": "",
-      "config": {
-        "tableIndexList": [
-          24,
-          40
-        ],
-        "tableColumn": [
-          {
-            "data": ["当前借阅：", "《红楼梦》", "《大耳朵贴图》"]
-          },
-          {
-            "data": ["应还日期", "2019-10-30", "2019-10-30"]
-          },
-          {
-            "data": ["剩余天数", "30", "30"]
-          }
-        ]
-      }
-    },
-    {
-      "type": 0,
-      "text": "",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "亲爱的读者，您当前办证已超过 %s 天，当前已借阅 %s 册，还可借阅 %s 册，截至 %s 累计借阅图书共 %s 册，节省购书成本约 %s 元。体验更多信息内容请扫描下方二维码关注图书馆公众号。",
-      "config": {
-      }
-    },
-    {
-      "type": 0,
-      "text": "",
-      "config": {
-      }
-    },
-    {
-      "type": 2,
-      "text": "",
-      "config": {
-        "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/tianjinzhongxin.jpg"
-      }
-    },
-    {
-      "type": 2,
-      "text": "",
-      "config": {
-        "imageUrl": "https://raw.githubusercontent.com/devallever/LotteryPrinterUsb/master/app/src/main/assets/logo1.png"
-      }
-    }
-  ]
+    ]
+  }
 }
